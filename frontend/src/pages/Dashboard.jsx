@@ -13,7 +13,7 @@ const FILTERS = [
   { label: "Fechados", value: "closed" },
 ];
 
-export function Dashboard({ onSelectBug }) {
+export function Dashboard({ projectId, onSelectBug }) {
   const [bugs, setBugs] = useState([]);
   const [meta, setMeta] = useState(null);
   const [filter, setFilter] = useState("");
@@ -22,12 +22,16 @@ export function Dashboard({ onSelectBug }) {
 
   useEffect(() => {
     fetchBugs();
-  }, [filter]);
+  }, [filter, projectId]);
 
   const fetchBugs = async () => {
     setLoading(true);
     try {
-      const res = await bugsApi.getAll(filter ? { status: filter } : {});
+      const params = {};
+      if (filter) params.status = filter;
+      if (projectId) params.project_id = projectId;
+
+      const res = await bugsApi.getAll(params);
       setBugs(res.data);
       setMeta(res.meta);
     } finally {
@@ -55,7 +59,7 @@ export function Dashboard({ onSelectBug }) {
   return (
     <div>
       <div style={styles.topbar}>
-        <h1 style={styles.heading}>Dashboard</h1>
+        <h1 style={styles.heading}>{projectId ? "Bugs do Projeto" : "Dashboard"}</h1>
         <button style={styles.addBtn} onClick={() => setShowForm((v) => !v)}>
           {showForm ? "Cancelar" : "+ Novo Bug"}
         </button>

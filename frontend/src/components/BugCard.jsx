@@ -25,31 +25,36 @@ const SEVERITY_LABEL = {
 
 export function BugCard({ bug, onClick, onStatusChange, onDelete }) {
   return (
-    <div style={styles.card} onClick={() => onClick(bug.id)}>
-      <div style={styles.top}>
-        <span style={styles.title}>{bug.title}</span>
-        <div style={styles.badges}>
-          <span style={{ ...styles.badge, ...SEVERITY_STYLE[bug.severity] }}>
-            {SEVERITY_LABEL[bug.severity]}
-          </span>
-          <span style={{ ...styles.badge, ...STATUS_STYLE[bug.status] }}>
-            {STATUS_LABEL[bug.status]}
-          </span>
+    <div style={styles.card}>
+      <div 
+        style={styles.clickableArea} 
+        onClick={() => onClick(bug)}
+      >
+        <div style={styles.top}>
+          <span style={styles.title}>{bug.title}</span>
+          <div style={styles.badges}>
+            <span style={{ ...styles.badge, ...SEVERITY_STYLE[bug.severity] }}>
+              {SEVERITY_LABEL[bug.severity]}
+            </span>
+            <span style={{ ...styles.badge, ...STATUS_STYLE[bug.status] }}>
+              {STATUS_LABEL[bug.status]}
+            </span>
+          </div>
         </div>
-      </div>
 
-      {bug.description && (
-        <p style={styles.description}>
-          {bug.description.length > 100
-            ? bug.description.slice(0, 100) + "..."
-            : bug.description}
-        </p>
-      )}
+        {bug.description && (
+          <p style={styles.description}>
+            {bug.description.length > 100
+              ? bug.description.slice(0, 100) + "..."
+              : bug.description}
+          </p>
+        )}
 
-      <div style={styles.meta}>
-        <span>📁 {bug.project?.name}</span>
-        <span>👤 {bug.reporter?.name}</span>
-        {bug.assignee && <span>🔧 {bug.assignee.name}</span>}
+        <div style={styles.meta}>
+          <span>📁 {bug.project?.name}</span>
+          <span>👤 {bug.reporter?.name}</span>
+          {bug.assignee && <span>🔧 {bug.assignee.name}</span>}
+        </div>
       </div>
 
       <div
@@ -89,6 +94,12 @@ const styles = {
     flexDirection: "column",
     gap: "10px",
     transition: "border-color .15s",
+  },
+  clickableArea: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    flex: 1,
   },
   top: {
     display: "flex",
