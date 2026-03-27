@@ -72,7 +72,11 @@ export function Projects({ onSelectProject }) {
       ) : (
         <div style={styles.grid}>
           {projects.map((proj) => (
-            <div key={proj.id} style={styles.card}>
+            <div 
+              key={proj.id} 
+              style={{ ...styles.card, cursor: "pointer" }} 
+              onClick={() => onSelectProject(proj)}
+            >
               <div style={styles.cardHeader}>
                 <h3 style={styles.title}>{proj.name}</h3>
                 <span style={{
@@ -92,7 +96,7 @@ export function Projects({ onSelectProject }) {
                 <span>🐛 {proj.bugs_count || 0} bugs associados</span>
               </div>
 
-              <div style={styles.actions}>
+              <div style={styles.actions} onClick={(e) => e.stopPropagation()}>
                 <button style={styles.bugsBtn} onClick={() => onSelectProject(proj)}>
                    Ver Bugs
                 </button>
