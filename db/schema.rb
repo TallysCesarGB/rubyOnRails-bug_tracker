@@ -12,14 +12,14 @@
 
 ActiveRecord::Schema[8.1].define(version: 2026_03_27_181618) do
   create_table "bugs", force: :cascade do |t|
-    t.integer "assignee_id", null: false
+    t.integer "assignee_id"
     t.datetime "created_at", null: false
     t.text "description"
     t.integer "project_id", null: false
-    t.integer "reporter_id", null: false
-    t.string "severity"
-    t.string "status"
-    t.string "title"
+    t.integer "reporter_id"
+    t.string "severity", default: "low"
+    t.string "status", default: "open"
+    t.string "title", null: false
     t.datetime "updated_at", null: false
     t.index ["assignee_id"], name: "index_bugs_on_assignee_id"
     t.index ["project_id"], name: "index_bugs_on_project_id"
@@ -52,9 +52,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_181618) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "bugs", "assignees"
   add_foreign_key "bugs", "projects"
-  add_foreign_key "bugs", "reporters"
+  add_foreign_key "bugs", "users", column: "assignee_id"
+  add_foreign_key "bugs", "users", column: "reporter_id"
   add_foreign_key "comments", "bugs"
   add_foreign_key "comments", "users"
 end

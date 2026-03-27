@@ -6,8 +6,8 @@ class CreateBugs < ActiveRecord::Migration[7.0]
       t.string     :severity,    default: "low"
       t.string     :status,      default: "open"
       t.references :project,     null: false, foreign_key: true
-      t.references :reporter,    null: false, foreign_key: true
-      t.references :assignee,                foreign_key: true 
+      t.references :reporter,                foreign_key: { to_table: :users }
+      t.references :assignee,                foreign_key: { to_table: :users }
       t.timestamps
     end
   end

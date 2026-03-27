@@ -64,3 +64,6 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+# Rack CORS para permitir requisições do frontend vindo do React
+gem "rack-cors"
