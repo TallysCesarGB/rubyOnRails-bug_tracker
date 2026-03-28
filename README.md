@@ -103,18 +103,23 @@ npm start
 ```
 /
 ├── app/
-│   ├── controllers/api/v1/
-│   │   ├── bugs_controller.rb
-│   │   ├── comments_controller.rb
-│   │   ├── projects_controller.rb
-│   │   ├── sessions_controller.rb
-│   │   └── users_controller.rb
-│   └── models/
-│       ├── bug.rb
-│       ├── comment.rb
-│       ├── project.rb
-│       └── user.rb
-├── frontend/
+│   ├── models/
+│   │   ├── user.rb
+│   │   ├── project.rb
+│   │   ├── bug.rb
+│   │   └── comment.rb
+│   ├── controllers/
+│   │   └── api/
+│   │       └── v1/
+│   │           ├── users_controller.rb
+│   │           ├── projects_controller.rb
+│   │           ├── bugs_controller.rb
+│   │           ├── sessions_controller.rb
+│   │           └── comments_controller.rb
+│   └── views/
+│       └── application/
+│           └── index.html.erb   ← porta de entrada da SPA
+├── frontend/                    ← React app
 │   ├── src/
 │   │   ├── context/
 │   │   │   └── AuthContext.jsx
