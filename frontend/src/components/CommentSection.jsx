@@ -1,20 +1,23 @@
-// src/components/CommentSection.jsx
 import { useState } from "react";
 import { commentsApi } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 export function CommentSection({ bugId, comments, onCommentAdded }) {
+    const { user } = useAuth();
     const [body, setBody] = useState("");
-    const [userId, setUserId] = useState("");
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!body.trim() || !userId) return;
+        if (!body.trim()) return;
         setLoading(true);
         try {
-            const comment = await commentsApi.create(bugId, { body, user_id: userId });
-            onCommentAdded(comment);
-            setBody("");
+        const comment = await commentsApi.create(bugId, {
+            body,
+            user_id: user.id,   // vem da sessão automaticamente
+        });
+        onCommentAdded(comment);
+        setBody("");
         } finally {
             setLoading(false);
         }
@@ -49,14 +52,10 @@ export function CommentSection({ bugId, comments, onCommentAdded }) {
                     placeholder="Escreva um comentário..."
                     rows={3}
                 />
+                <div style={styles.counter}>
+                    {body.length} caracteres
+                </div>
                 <div style={styles.formBottom}>
-                    <input
-                        style={styles.userInput}
-                        type="number"
-                        placeholder="Seu user ID"
-                        value={userId}
-                        onChange={(e) => setUserId(e.target.value)}
-                    />
                     <button type="submit" disabled={loading} style={styles.sendBtn}>
                         {loading ? "Enviando..." : "Comentar"}
                     </button>
@@ -93,5 +92,11 @@ const styles = {
         fontSize: "13px", padding: "6px 16px", borderRadius: "8px",
         border: "0.5px solid #ccc", background: "#f5f5f5",
         fontWeight: "500", cursor: "pointer",
+    },
+    counter: {
+        fontSize: "11px",
+        color: "#999",
+        textAlign: "right",
+        marginTop: "4px",
     },
 };

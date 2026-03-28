@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { projectsApi, usersApi } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 const EMPTY = {
   title: "", description: "", severity: "low",
@@ -7,7 +8,11 @@ const EMPTY = {
 };
 
 export function BugForm({ onSubmit, onCancel, initialData = {} }) {
-  const [form, setForm]         = useState({ ...EMPTY, ...initialData });
+  const { user } = useAuth();
+  const [form, setForm] = useState({ ...EMPTY,
+                                    reporter_id: user?.id ?? "",
+                                    ...initialData,
+                                  });
   const [projects, setProjects] = useState([]);
   const [users, setUsers]       = useState([]);
   const [errors, setErrors]     = useState({});
@@ -102,13 +107,12 @@ export function BugForm({ onSubmit, onCancel, initialData = {} }) {
             </select>
           </Field>
 
-          <Field label="Reportado por *" error={errors.reporter_id}>
-            <select style={styles.input} value={form.reporter_id} onChange={set("reporter_id")}>
-              <option value="">Selecione...</option>
-              {users.map((u) => (
-                <option key={u.id} value={u.id}>{u.name}</option>
-              ))}
-            </select>
+          <Field label="Reportado por" error={errors.reporter_id}>
+            <input
+              style={{ ...styles.input, background: "#f5f5f5", color: "#666" }}
+              value={user?.name ?? ""}
+              disabled
+            />
           </Field>
         </div>
 

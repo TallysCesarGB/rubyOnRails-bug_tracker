@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_27_181618) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_28_154307) do
   create_table "bugs", force: :cascade do |t|
     t.integer "assignee_id"
     t.datetime "created_at", null: false
     t.text "description"
     t.integer "project_id", null: false
-    t.integer "reporter_id"
+    t.integer "reporter_id", null: false
     t.string "severity", default: "low"
     t.string "status", default: "open"
     t.string "title", null: false
@@ -48,6 +48,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_181618) do
     t.datetime "created_at", null: false
     t.string "email"
     t.string "name"
+    t.string "password"
     t.string "role"
     t.datetime "updated_at", null: false
   end
