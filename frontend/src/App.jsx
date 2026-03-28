@@ -110,18 +110,28 @@ export default function App() {
 }
 
 const styles = {
-  app: { display: "flex", minHeight: "100vh", background: "#F4F5F7", fontFamily: "Inter, system-ui, sans-serif" },
+  app: { display: "flex", Height: "100vh", background: "#F4F5F7", fontFamily: "Inter, system-ui, sans-serif" },
   sidebar: {
-    width: "220px", background: "#fff", borderRight: "1px solid #E5E7EB",
-    padding: "20px 16px", display: "flex", flexDirection: "column", gap: "8px",
+    width: "220px",
+    background: "#fff",
+    borderRight: "1px solid #E5E7EB",
+    padding: "24px 16px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
     flexShrink: 0,
+    height: "100vh",
+    position: "sticky",
+    top: 0,
+    overflowY: "auto",
+    boxSizing: "border-box",
   },
   logo: {
     fontSize: "16px", fontWeight: "700", padding: "4px 10px 24px",
     color: "#111827", display: "flex", alignItems: "center", gap: "8px",
   },
   logoIcon: { fontSize: "20px" },
-  nav: { display: "flex", flexDirection: "column", gap: "6px", flex: 1 },
+  nav: { display: "flex", flexDirection: "column", gap: "6px", flex: 1, overflowY: "auto" },
   navItem: {
     fontSize: "14px", padding: "10px 14px", borderRadius: "8px",
     border: "none", background: "transparent", cursor: "pointer",
@@ -132,8 +142,12 @@ const styles = {
   main: { flex: 1, padding: "32px 40px", maxWidth: "960px", width: "100%" },
   userBox: {
     borderTop: "1px solid #E5E7EB", paddingTop: "14px", marginTop: "8px",
-    display: "flex", flexDirection: "column", gap: "8px",
-  },
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "8px",
+    },
   userName: { fontSize: "13px", color: "#374151", fontWeight: "500" },
   logoutBtn: {
     fontSize: "12px", padding: "6px 10px", borderRadius: "8px",
