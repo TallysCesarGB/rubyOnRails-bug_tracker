@@ -1,17 +1,9 @@
-<<<<<<< HEAD
-=======
 🇺🇸 [English](README.md) | 🇧🇷 [Português](README.pt.md)
 
->>>>>>> f6e94b9 (update `README`)
 # 🐞 Bug Tracker
 
 <div align="center">
 
-<<<<<<< HEAD
-[![English](https://img.shields.io/badge/lang-English-blue?style=flat-square)](README.md)
-
-=======
->>>>>>> f6e94b9 (update `README`)
 ![Ruby on Rails](https://img.shields.io/badge/Ruby_on_Rails-8.x-CC0000?style=flat-square&logo=ruby-on-rails&logoColor=white)
 ![React](https://img.shields.io/badge/React-SPA-61DAFB?style=flat-square&logo=react&logoColor=black)
 ![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?style=flat-square&logo=sqlite&logoColor=white)
