@@ -1,73 +1,167 @@
 # 🐞 Bug Tracker
 
-Este é um sistema completo de gerenciamento e rastreamento de Bugs (Bug Tracker). O projeto é dividido em uma API RESTful construída com **Ruby on Rails** no backend, e uma Single Page Application (SPA) moderna feita com **React** no frontend.
+<div align="center">
 
-## ✨ Funcionalidades
+[![Português](https://img.shields.io/badge/lang-Português-green?style=flat-square)](README.pt.md)
 
-- **Dashboard Integrado:** Visão geral de todos os bugs abertos, em andamento e resolvidos.
-- **Gerenciamento de Projetos (CRUD):** Crie, edite e arquive projetos. Cada projeto funciona como um escopo isolado de acompanhamento.
-- **Rastreamento de Bugs:** Crie cards detalhados associando-os a um projeto, severidade (Baixa, Média, Alta, Crítica) e acompanhe o status.
-- **Comentários:** Sistema de discussão interno para cada bug registrado.
-- **Atribuições:** Vincule usuários como "Relatores" (Reporters) e "Responsáveis" (Assignees).
-- **Interface e UI Moderna:** Layout resposivo baseado em CSS Grid, sidebar persistente, navegação em cascata inteligente visando a melhor experiência (UX/UI).
+![Ruby on Rails](https://img.shields.io/badge/Ruby_on_Rails-8.x-CC0000?style=flat-square&logo=ruby-on-rails&logoColor=white)
+![React](https://img.shields.io/badge/React-SPA-61DAFB?style=flat-square&logo=react&logoColor=black)
+![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?style=flat-square&logo=sqlite&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
----
+</div>
 
-## 🛠️ Tecnologias Utilizadas
-
-**Backend (API)**
-- Ruby on Rails 8.x (Modo API)
-- Banco de Dados SQLite (`storage/development.sqlite3`)
-- `rack-cors` (Permissão de recursos para o Frontend)
-
-**Frontend (UI)**
-- React.js
-- Comunicação Fetch API Nativa
-- Estilização in-JS dinâmica.
+A full-featured bug tracking and management system. The application is split into a **RESTful API** built with Ruby on Rails and a modern **Single Page Application (SPA)** in React.
 
 ---
 
-## 🚀 Como Executar o Projeto Localmente
+## ✨ Features
 
-Para rodar a aplicação simulando o ambiente completo, você precisará iniciar o servidor do Backend (Rails) e o servidor de desenvolvimento do Frontend (React) em **terminais separados**.
+- **Integrated Dashboard** — Overview of all bugs: open, in progress, and resolved, with real-time metric cards.
+- **Session-based Auth** — User registration and login. The session persists in the browser and automatically identifies the user when opening tickets or commenting.
+- **Project Management** — Create, edit, and archive projects. Each project acts as an isolated bug tracking scope.
+- **Bug Tracking** — Detailed cards with severity levels (Low, Medium, High, Critical), status, reporter, and assignee.
+- **Comments** — Internal discussion thread per bug, with a character counter and automatic identification from the logged-in user.
+- **Assignments** — Link users as *Reporter* and *Assignee* on each ticket.
+- **Responsive UI** — CSS Grid layout, persistent fixed sidebar, cascading navigation with smart breadcrumbs.
 
-### 1. Inicializando a API (Backend)
-No nível raiz do projeto, instale as gems e rode o banco de dados:
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Backend | Ruby on Rails 8.x (API mode) |
+| Database | SQLite (`storage/development.sqlite3`) |
+| CORS | `rack-cors` |
+| Frontend | React.js (SPA) |
+| Styling | Dynamic CSS-in-JS |
+| HTTP Client | Native Fetch API |
+
+---
+
+## 🗄️ Data Model
+
+```
+Users ──────────────────────────────────────────────┐
+  id, name, email, password, role                   │
+                                                     │
+Projects                                            │
+  id, name, description, status                     │
+    │                                               │
+    └──► Bugs ◄──────────────────────────────────── ┘
+           id, title, description                  reporter_id / assignee_id
+           severity (low|medium|high|critical)
+           status (open|in_progress|resolved|closed)
+           project_id, reporter_id, assignee_id
+             │
+             └──► Comments
+                    id, body, bug_id, user_id
+```
+
+---
+
+## 🚀 Running the Project
+
+You will need **two terminals open** simultaneously.
+
+### 1. Backend (Rails API)
 
 ```bash
-# Instale as dependências do Ruby
+# Install Ruby dependencies
 bundle install
 
-# Crie e rode as migrações do banco de dados (SQLite)
+# Run database migrations
 bin/rails db:migrate
 
-# Inicie o servidor (padrão em http://localhost:3000)
+# Start the server on port 3000
 bin/rails server
 ```
 
-### 2. Inicializando a Interface (Frontend)
-Abra uma nova aba/janela do seu terminal, acesse a subpasta `/frontend` e instale as dependências JavaScript:
+> API available at `http://localhost:3000/api/v1`
+
+### 2. Frontend (React)
 
 ```bash
-# Entre na pasta do frontend
+# Navigate to the frontend folder
 cd frontend
 
-# Instale os pacotes do Node
+# Install Node dependencies
 npm install
 
-# Inicie o servidor frontend (padrão em http://localhost:3001 ou 3002)
+# Start the development server
 npm start
 ```
 
-A aplicação frontend deverá se abrir automaticamente no seu navegador. Se não, acesse a porta gerada (comumente `http://localhost:3001`). O frontend já está configurado para consumir os dados do backend rodando na porta `3000`.
+> Interface available at `http://localhost:3001`  
+> The frontend is pre-configured to consume the API on port `3000`.
 
 ---
 
-## 🗄️ Estrutura do Banco de Dados
+## 📁 Project Structure
 
-* **Users:** Tabela de usuários.
-* **Projects:** Engloba escopos (ex: *App Mobile*, *API Core*, *Portal Web*).
-* **Bugs:** Vinculados diretamente a um `Project`, a um `Reporter (User)` e opcionalmente a um `Assignee (User)`.
-* **Comments:** Respostas/Comentários, que têm chave estrangeira obrigatória com um `Bug` e um `User`.
+```
+/
+├── app/
+│   ├── controllers/api/v1/
+│   │   ├── bugs_controller.rb
+│   │   ├── comments_controller.rb
+│   │   ├── projects_controller.rb
+│   │   ├── sessions_controller.rb
+│   │   └── users_controller.rb
+│   └── models/
+│       ├── bug.rb
+│       ├── comment.rb
+│       ├── project.rb
+│       └── user.rb
+├── frontend/
+│   ├── src/
+│   │   ├── context/
+│   │   │   └── AuthContext.jsx
+│   │   ├── components/
+│   │   │   ├── BugCard.jsx
+│   │   │   ├── BugForm.jsx
+│   │   │   ├── CommentSection.jsx
+│   │   │   ├── MetricCards.jsx
+│   │   │   └── ProjectForm.jsx
+│   │   ├── pages/
+│   │   │   ├── AuthPage.jsx
+│   │   │   ├── BugDetail.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   └── Projects.jsx
+│   │   ├── services/
+│   │   │   └── api.js
+│   │   └── App.jsx
+│   └── package.json
+└── config/
+    └── routes.rb
+```
 
-Feito com dedicação para simplificar a organização de tarefas. 🚀
+---
+
+## 🔌 API Endpoints
+
+| Method | Route | Description |
+|--------|-------|-------------|
+| `POST` | `/api/v1/login` | User authentication |
+| `GET` | `/api/v1/users` | List users |
+| `POST` | `/api/v1/users` | Register user |
+| `GET` | `/api/v1/projects` | List projects |
+| `POST` | `/api/v1/projects` | Create project |
+| `PUT` | `/api/v1/projects/:id` | Update project |
+| `DELETE` | `/api/v1/projects/:id` | Delete project |
+| `GET` | `/api/v1/bugs` | List bugs (supports filters) |
+| `POST` | `/api/v1/bugs` | Create bug |
+| `PUT` | `/api/v1/bugs/:id` | Update bug |
+| `DELETE` | `/api/v1/bugs/:id` | Delete bug |
+| `GET` | `/api/v1/bugs/:id/comments` | List comments |
+| `POST` | `/api/v1/bugs/:id/comments` | Create comment |
+| `DELETE` | `/api/v1/bugs/:bug_id/comments/:id` | Delete comment |
+
+---
+
+<div align="center">
+Built with dedication to simplify task organization. 🚀
+<br><br>
+<a href="#-bug-tracker">⬆ Back to top</a>
+</div>
