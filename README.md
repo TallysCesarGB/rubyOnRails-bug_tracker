@@ -1,8 +1,8 @@
+🇺🇸 [English](README.md) | 🇧🇷 [Português](README.pt.md)
+
 # 🐞 Bug Tracker
 
 <div align="center">
-
-[![Português](https://img.shields.io/badge/lang-Português-green?style=flat-square)](README.pt.md)
 
 ![Ruby on Rails](https://img.shields.io/badge/Ruby_on_Rails-8.x-CC0000?style=flat-square&logo=ruby-on-rails&logoColor=white)
 ![React](https://img.shields.io/badge/React-SPA-61DAFB?style=flat-square&logo=react&logoColor=black)
