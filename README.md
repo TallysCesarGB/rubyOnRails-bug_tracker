@@ -61,6 +61,52 @@ Projects                                            │
 
 ---
 
+## 🗄️ Data Diagram
+
+```mermaid
+erDiagram
+    USER {
+        uuid id PK
+        string name
+        string email
+        string role
+        timestamp created_at
+    }
+    PROJECT {
+        uuid id PK
+        string name
+        string description
+        string status
+        timestamp created_at
+    }
+    BUG {
+        uuid id PK
+        uuid project_id FK
+        uuid reporter_id FK
+        uuid assignee_id FK
+        string title
+        text description
+        string severity
+        string status
+        timestamp created_at
+        timestamp updated_at
+    }
+    COMMENT {
+        uuid id PK
+        uuid bug_id FK
+        uuid user_id FK
+        text body
+        timestamp created_at
+    }
+    USER ||--o{ BUG : "reports"
+    USER ||--o{ BUG : "assigned to"
+    PROJECT ||--o{ BUG : "contains"
+    BUG ||--o{ COMMENT : "has"
+    USER ||--o{ COMMENT : "writes"
+```
+
+---
+
 ## 🚀 Running the Project
 
 You will need **two terminals open** simultaneously.
