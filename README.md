@@ -45,7 +45,7 @@ A full-featured bug tracking and management system. The application is split int
 ```
 Users ──────────────────────────────────────────────┐
   id, name, email, password, role                   │
-                                                     │
+                                                    │
 Projects                                            │
   id, name, description, status                     │
     │                                               │

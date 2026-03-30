@@ -45,7 +45,7 @@ Sistema completo de gerenciamento e rastreamento de bugs. A aplicação é divid
 ```
 Users ──────────────────────────────────────────────┐
   id, name, email, password, role                   │
-                                                     │
+                                                    │
 Projects                                            │
   id, name, description, status                     │
     │                                               │
