@@ -4,6 +4,8 @@ import { AuthPage } from "./pages/AuthPage";
 import { Dashboard } from "./pages/Dashboard";
 import { BugDetail } from "./pages/BugDetail";
 import { Projects } from "./pages/Projects";
+import { Flex, Box, Text } from "@chakra-ui/react";
+import { useTheme } from "next-themes";
 
 function AppInner() {
   const { user, logout } = useAuth();
@@ -11,6 +13,9 @@ function AppInner() {
   const [selectedBug, setSelectedBug] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
   const [fromPage, setFromPage] = useState(null);
+  
+  const { theme, setTheme } = useTheme();
+  const toggleColorMode = () => setTheme(theme === 'dark' ? 'light' : 'dark');
 
   if (!user) return <AuthPage />;
 
@@ -46,58 +51,151 @@ function AppInner() {
     }
   };
 
+  const NavItem = ({ active, children, onClick, pl = "14px" }) => (
+    <Box
+      as="button"
+      fontSize="sm"
+      px="14px"
+      pl={pl}
+      py="10px"
+      borderRadius="md"
+      border="none"
+      cursor="pointer"
+      textAlign="left"
+      fontWeight={active ? "semibold" : "medium"}
+      color={active ? "blue.600" : "gray.600"}
+      bg={active ? "blue.50" : "transparent"}
+      _hover={{ bg: active ? "blue.100" : "gray.100" }}
+      _dark={{
+        color: active ? "blue.200" : "gray.400",
+        bg: active ? "whiteAlpha.200" : "transparent",
+        _hover: { bg: active ? "whiteAlpha.300" : "whiteAlpha.100" }
+      }}
+      onClick={onClick}
+      w="100%"
+      transition="all 0.2s"
+    >
+      {children}
+    </Box>
+  );
+
   return (
-    <div style={styles.app}>
-      <aside style={styles.sidebar}>
-        <div style={styles.logo}>
-          <span style={styles.logoIcon}>🐞</span> Bug Tracker
-        </div>
-        <nav style={styles.nav}>
-          <button
-            style={{ ...styles.navItem, ...(page === "dashboard" ? styles.navActive : {}) }}
-            onClick={() => navTo("dashboard")}
-          >
+    <Flex h="100vh" bg="#F4F5F7" _dark={{ bg: "gray.900" }} fontFamily="Inter, system-ui, sans-serif">
+      <Flex
+        w="220px"
+        bg="white"
+        _dark={{ bg: "gray.800", borderColor: "gray.700" }}
+        borderRight="1px solid"
+        borderColor="gray.200"
+        p="6"
+        px="4"
+        direction="column"
+        gap="2"
+        flexShrink="0"
+        h="100vh"
+        position="sticky"
+        top="0"
+        overflowY="auto"
+      >
+        <Box fontWeight="bold" fontSize="md" px="2" pb="6" color="gray.900" _dark={{ color: "white" }} display="flex" alignItems="center" gap="2">
+          <Text fontSize="xl">🐞</Text> Bug Tracker
+        </Box>
+        
+        <Flex direction="column" gap="1.5" flex="1" overflowY="auto">
+          <NavItem active={page === "dashboard"} onClick={() => navTo("dashboard")}>
             Dashboard Geral
-          </button>
-          <button
-            style={{ ...styles.navItem, ...(page === "projects" ? styles.navActive : {}) }}
-            onClick={() => navTo("projects")}
-          >
+          </NavItem>
+          <NavItem active={page === "projects"} onClick={() => navTo("projects")}>
             Projetos
-          </button>
+          </NavItem>
+          
           {(page === "project-dashboard" || (page === "bug-detail" && selectedProject)) && (
-            <button
-              style={{ ...styles.navItem, ...(page === "project-dashboard" ? styles.navActive : {}) }}
-              onClick={() => setPage("project-dashboard")}
-            >
+            <NavItem active={page === "project-dashboard"} onClick={() => setPage("project-dashboard")}>
               ↳ {selectedProject.name}
-            </button>
+            </NavItem>
           )}
+          
           {page === "bug-detail" && selectedBug && (
-            <button style={{ ...styles.navItem, ...styles.navActive, paddingLeft: "20px" }}>
+            <NavItem active={true} pl="20px">
               ↳ {selectedBug.title.length > 20 ? selectedBug.title.slice(0, 20) + "..." : selectedBug.title}
-            </button>
+            </NavItem>
           )}
-        </nav>
+        </Flex>
+
+        <Box my="4">
+          <Box
+            as="button"
+            w="100%"
+            py="2"
+            px="3"
+            borderRadius="md"
+            border="1px solid"
+            borderColor="gray.300"
+            _dark={{ borderColor: "gray.600", bg: "gray.700", color: "white", _hover: { bg: "gray.600" } }}
+            bg="gray.100"
+            color="gray.800"
+            fontSize="sm"
+            fontWeight="bold"
+            cursor="pointer"
+            onClick={toggleColorMode}
+            _hover={{ bg: "gray.200" }}
+            transition="all 0.2s"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            gap="2"
+            boxShadow="sm"
+          >
+            {theme === 'dark' ? '☀️ Modo Claro' : '🌙 Modo Escuro'}
+          </Box>
+        </Box>
 
         {/* Usuário logado + logout */}
-        <div style={styles.userBox}>
-          <span style={styles.userName}>👤 {user.name}</span>
-          <button style={styles.logoutBtn} onClick={logout}>Sair</button>
-        </div>
-      </aside>
+        <Flex
+          borderTop="1px solid"
+          borderColor="gray.200"
+          _dark={{ borderColor: "gray.700" }}
+          pt="3"
+          mt="2"
+          align="center"
+          justify="space-between"
+          gap="2"
+        >
+          <Text fontSize="sm" color="gray.700" _dark={{ color: "gray.300" }} fontWeight="medium">
+            👤 {user.name}
+          </Text>
+          <Box
+            as="button"
+            fontSize="xs"
+            py="1"
+            px="2"
+            borderRadius="md"
+            border="1px solid"
+            borderColor="gray.200"
+            _dark={{ borderColor: "gray.600", color: "gray.300", _hover: { bg: "whiteAlpha.200" } }}
+            bg="transparent"
+            color="gray.600"
+            cursor="pointer"
+            textAlign="center"
+            _hover={{ bg: "gray.100" }}
+            onClick={logout}
+          >
+            Sair
+          </Box>
+        </Flex>
+      </Flex>
 
-      <div style={styles.mainWrapper}>
-        <main style={styles.main}>
+      <Flex flex="1" justify="center" overflowY="auto">
+        <Box flex="1" p="8" maxW="960px" w="100%">
           {page === "dashboard" && <Dashboard onSelectBug={goToBug} />}
           {page === "projects" && <Projects onSelectProject={goToProjectDashboard} />}
           {page === "project-dashboard" && (
             <Dashboard projectId={selectedProject?.id} onSelectBug={goToBug} />
           )}
           {page === "bug-detail" && <BugDetail bugId={selectedBug?.id} onBack={goBack} />}
-        </main>
-      </div>
-    </div>
+        </Box>
+      </Flex>
+    </Flex>
   );
 }
 
@@ -108,50 +206,3 @@ export default function App() {
     </AuthProvider>
   );
 }
-
-const styles = {
-  app: { display: "flex", Height: "100vh", background: "#F4F5F7", fontFamily: "Inter, system-ui, sans-serif" },
-  sidebar: {
-    width: "220px",
-    background: "#fff",
-    borderRight: "1px solid #E5E7EB",
-    padding: "24px 16px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "8px",
-    flexShrink: 0,
-    height: "100vh",
-    position: "sticky",
-    top: 0,
-    overflowY: "auto",
-    boxSizing: "border-box",
-  },
-  logo: {
-    fontSize: "16px", fontWeight: "700", padding: "4px 10px 24px",
-    color: "#111827", display: "flex", alignItems: "center", gap: "8px",
-  },
-  logoIcon: { fontSize: "20px" },
-  nav: { display: "flex", flexDirection: "column", gap: "6px", flex: 1, overflowY: "auto" },
-  navItem: {
-    fontSize: "14px", padding: "10px 14px", borderRadius: "8px",
-    border: "none", background: "transparent", cursor: "pointer",
-    textAlign: "left", color: "#4B5563", fontWeight: "500",
-  },
-  navActive: { background: "#EEF2FF", color: "#4F46E5", fontWeight: "600" },
-  mainWrapper: { flex: 1, display: "flex", justifyContent: "center", overflowY: "auto" },
-  main: { flex: 1, padding: "32px 40px", maxWidth: "960px", width: "100%" },
-  userBox: {
-    borderTop: "1px solid #E5E7EB", paddingTop: "14px", marginTop: "8px",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: "8px",
-    },
-  userName: { fontSize: "13px", color: "#374151", fontWeight: "500" },
-  logoutBtn: {
-    fontSize: "12px", padding: "6px 10px", borderRadius: "8px",
-    border: "1px solid #E5E7EB", background: "transparent",
-    color: "#6B7280", cursor: "pointer", textAlign: "left",
-  },
-};

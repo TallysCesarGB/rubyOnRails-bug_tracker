@@ -1,9 +1,9 @@
-// src/pages/Dashboard.jsx
 import { useState, useEffect } from "react";
 import { bugsApi } from "../services/api";
 import { BugCard } from "../components/BugCard";
 import { BugForm } from "../components/BugForm";
 import { MetricCards } from "../components/MetricCards";
+import { Box, Flex, Text, Button } from "@chakra-ui/react";
 
 const FILTERS = [
   { label: "Todos", value: "" },
@@ -57,13 +57,30 @@ export function Dashboard({ projectId, onSelectBug }) {
   };
 
   return (
-    <div>
-      <div style={styles.topbar}>
-        <h1 style={styles.heading}>{projectId ? "Bugs do Projeto" : "Dashboard"}</h1>
-        <button style={styles.addBtn} onClick={() => setShowForm((v) => !v)}>
+    <Box>
+      <Flex justify="space-between" align="center" mb="5">
+        <Text as="h1" fontSize="xl" fontWeight="medium" color="gray.900" _dark={{ color: "white" }}>
+          {projectId ? "Bugs do Projeto" : "Dashboard"}
+        </Text>
+        <Box
+          as="button"
+          fontSize="sm"
+          px="4"
+          py="1.5"
+          borderRadius="md"
+          border="1px solid"
+          borderColor="gray.300"
+          _dark={{ borderColor: "gray.600", bg: "gray.700", color: "white", _hover: { bg: "gray.600" } }}
+          bg="white"
+          fontWeight="medium"
+          cursor="pointer"
+          onClick={() => setShowForm((v) => !v)}
+          _hover={{ bg: "gray.50" }}
+          transition="all 0.2s"
+        >
           {showForm ? "Cancelar" : "+ Novo Bug"}
-        </button>
-      </div>
+        </Box>
+      </Flex>
 
       <MetricCards meta={meta} />
 
@@ -74,27 +91,45 @@ export function Dashboard({ projectId, onSelectBug }) {
         />
       )}
 
-      <div style={styles.filterBar}>
-        {FILTERS.map((f) => (
-          <button
-            key={f.value}
-            style={{
-              ...styles.filterBtn,
-              ...(filter === f.value ? styles.filterActive : {}),
-            }}
-            onClick={() => setFilter(f.value)}
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
+      <Flex gap="1.5" mb="4" flexWrap="wrap">
+        {FILTERS.map((f) => {
+          const isActive = filter === f.value;
+          return (
+            <Box
+              as="button"
+              key={f.value}
+              fontSize="xs"
+              px="3"
+              py="1"
+              borderRadius="full"
+              border="1px solid"
+              borderColor={isActive ? "gray.400" : "gray.200"}
+              bg={isActive ? "gray.200" : "white"}
+              color={isActive ? "gray.900" : "gray.600"}
+              fontWeight={isActive ? "medium" : "normal"}
+              cursor="pointer"
+              _dark={{
+                bg: isActive ? "gray.600" : "gray.800",
+                borderColor: isActive ? "gray.500" : "gray.700",
+                color: isActive ? "white" : "gray.400",
+                _hover: { bg: isActive ? "gray.500" : "gray.700" }
+              }}
+              _hover={{ bg: isActive ? "gray.300" : "gray.50" }}
+              onClick={() => setFilter(f.value)}
+              transition="all 0.2s"
+            >
+              {f.label}
+            </Box>
+          );
+        })}
+      </Flex>
 
       {loading ? (
-        <p style={styles.loading}>Carregando bugs...</p>
+        <Text color="gray.500" _dark={{ color: "gray.400" }} fontSize="sm">Carregando bugs...</Text>
       ) : bugs.length === 0 ? (
-        <p style={styles.empty}>Nenhum bug encontrado.</p>
+        <Text color="gray.500" _dark={{ color: "gray.400" }} fontSize="sm">Nenhum bug encontrado.</Text>
       ) : (
-        <div style={styles.list}>
+        <Flex direction="column" gap="2.5">
           {bugs.map((bug) => (
             <BugCard
               key={bug.id}
@@ -104,27 +139,8 @@ export function Dashboard({ projectId, onSelectBug }) {
               onStatusChange={handleStatusChange}
             />
           ))}
-        </div>
+        </Flex>
       )}
-    </div>
+    </Box>
   );
 }
-
-const styles = {
-  topbar: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" },
-  heading: { fontSize: "20px", fontWeight: "500" },
-  addBtn: {
-    fontSize: "13px", padding: "7px 16px", borderRadius: "8px",
-    border: "0.5px solid #ccc", background: "#fff",
-    fontWeight: "500", cursor: "pointer",
-  },
-  filterBar: { display: "flex", gap: "6px", marginBottom: "14px", flexWrap: "wrap" },
-  filterBtn: {
-    fontSize: "12px", padding: "4px 12px", borderRadius: "20px",
-    border: "0.5px solid #ddd", background: "#fff", cursor: "pointer", color: "#666",
-  },
-  filterActive: { background: "#f0f0f0", color: "#111", fontWeight: "500", borderColor: "#bbb" },
-  list: { display: "flex", flexDirection: "column", gap: "10px" },
-  loading: { color: "#888", fontSize: "14px" },
-  empty: { color: "#888", fontSize: "14px" },
-};

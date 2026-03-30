@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { projectsApi } from "../services/api";
 import { ProjectForm } from "../components/ProjectForm";
+import { Box, Flex, Text, Grid } from "@chakra-ui/react";
 
 export function Projects({ onSelectProject }) {
   const [projects, setProjects] = useState([]);
@@ -49,13 +50,31 @@ export function Projects({ onSelectProject }) {
   };
 
   return (
-    <div>
-      <div style={styles.topbar}>
-        <h1 style={styles.heading}>Projetos</h1>
-        <button style={styles.addBtn} onClick={() => setShowForm(!showForm)}>
+    <Box>
+      <Flex justify="space-between" align="center" mb="6">
+        <Text as="h1" fontSize="2xl" fontWeight="semibold" color="gray.900" _dark={{ color: "white" }}>
+          Projetos
+        </Text>
+        <Box
+          as="button"
+          fontSize="sm"
+          px="4"
+          py="2"
+          borderRadius="md"
+          border="1px solid"
+          borderColor="gray.300"
+          _dark={{ borderColor: "gray.600", bg: "gray.700", color: "white", _hover: { bg: "gray.600" } }}
+          bg="white"
+          fontWeight="medium"
+          cursor="pointer"
+          onClick={() => setShowForm(!showForm)}
+          _hover={{ bg: "gray.50" }}
+          transition="all 0.2s"
+          boxShadow="sm"
+        >
           {showForm ? "Cancelar" : "+ Novo Projeto"}
-        </button>
-      </div>
+        </Box>
+      </Flex>
 
       {showForm && (
         <ProjectForm
@@ -66,91 +85,118 @@ export function Projects({ onSelectProject }) {
       )}
 
       {loading ? (
-        <p style={styles.loading}>Carregando projetos...</p>
+        <Text color="gray.500" _dark={{ color: "gray.400" }} fontSize="sm">Carregando projetos...</Text>
       ) : projects.length === 0 ? (
-        <p style={styles.empty}>Nenhum projeto cadastrado.</p>
+        <Text color="gray.500" _dark={{ color: "gray.400" }} fontSize="sm">Nenhum projeto cadastrado.</Text>
       ) : (
-        <div style={styles.grid}>
+        <Grid templateColumns="repeat(auto-fill, minmax(320px, 1fr))" gap="5">
           {projects.map((proj) => (
-            <div 
-              key={proj.id} 
-              style={{ ...styles.card, cursor: "pointer" }} 
+            <Flex
+              key={proj.id}
+              direction="column"
+              gap="3"
+              bg="white"
+              _dark={{ bg: "gray.800", borderColor: "gray.700" }}
+              border="1px solid"
+              borderColor="gray.200"
+              borderRadius="xl"
+              p="5"
+              cursor="pointer"
+              boxShadow="sm"
+              transition="transform 0.1s, box-shadow 0.1s"
               onClick={() => onSelectProject(proj)}
+              _hover={{ transform: "translateY(-1px)", boxShadow: "md" }}
             >
-              <div style={styles.cardHeader}>
-                <h3 style={styles.title}>{proj.name}</h3>
-                <span style={{
-                  ...styles.statusBadge,
-                  background: proj.status === "active" ? "#EAF3DE" : "#F1EFE8",
-                  color: proj.status === "active" ? "#27500A" : "#444441"
-                }}>
+              <Flex justify="space-between" align="flex-start">
+                <Text fontSize="md" fontWeight="semibold" color="gray.900" _dark={{ color: "gray.100" }}>
+                  {proj.name}
+                </Text>
+                <Box
+                  fontSize="xs"
+                  px="2"
+                  py="0.5"
+                  borderRadius="full"
+                  fontWeight="medium"
+                  bg={proj.status === "active" ? "green.100" : "gray.100"}
+                  color={proj.status === "active" ? "green.800" : "gray.800"}
+                  _dark={{
+                    bg: proj.status === "active" ? "green.900" : "gray.700",
+                    color: proj.status === "active" ? "green.200" : "gray.300",
+                  }}
+                >
                   {proj.status === "active" ? "Ativo" : "Arquivado"}
-                </span>
-              </div>
+                </Box>
+              </Flex>
               
-              <p style={styles.desc}>
-                {proj.description || <span style={{color: "#aaa", fontStyle: "italic"}}>Sem descrição</span>}
-              </p>
+              <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.400" }} lineHeight="1.5" flex="1">
+                {proj.description || <Box as="span" color="gray.400" fontStyle="italic">Sem descrição</Box>}
+              </Text>
               
-              <div style={styles.meta}>
-                <span>🐛 {proj.bugs_count || 0} bugs associados</span>
-              </div>
+              <Box fontSize="xs" color="gray.500" _dark={{ color: "gray.500", borderColor: "gray.700" }} mt="1" pb="3" borderBottom="1px solid" borderColor="gray.100">
+                🐛 {proj.bugs_count || 0} bugs associados
+              </Box>
 
-              <div style={styles.actions} onClick={(e) => e.stopPropagation()}>
-                <button style={styles.bugsBtn} onClick={() => onSelectProject(proj)}>
+              <Flex justify="space-between" align="center" pt="1" onClick={(e) => e.stopPropagation()}>
+                <Box
+                  as="button"
+                  fontSize="sm"
+                  px="3.5"
+                  py="1.5"
+                  borderRadius="md"
+                  border="1px solid"
+                  borderColor="blue.200"
+                  bg="blue.50"
+                  color="blue.700"
+                  fontWeight="medium"
+                  cursor="pointer"
+                  _dark={{ borderColor: "blue.500", bg: "blue.900", color: "blue.200", _hover: { bg: "blue.800" } }}
+                  _hover={{ bg: "blue.100" }}
+                  transition="all 0.2s"
+                  onClick={() => onSelectProject(proj)}
+                >
                    Ver Bugs
-                </button>
-                <div style={styles.btnGroup}>
-                   <button style={styles.editBtn} onClick={() => openEdit(proj)}>Editar</button>
-                   <button style={styles.delBtn} onClick={() => handleDelete(proj.id)}>Excluir</button>
-                </div>
-              </div>
-            </div>
+                </Box>
+                <Flex gap="2">
+                   <Box
+                     as="button"
+                     fontSize="xs"
+                     px="2.5"
+                     py="1"
+                     borderRadius="md"
+                     border="1px solid"
+                     borderColor="gray.200"
+                     bg="white"
+                     color="gray.600"
+                     cursor="pointer"
+                     _dark={{ borderColor: "gray.600", bg: "gray.700", color: "gray.300", _hover: { bg: "gray.600" } }}
+                     _hover={{ bg: "gray.50" }}
+                     onClick={() => openEdit(proj)}
+                   >
+                     Editar
+                   </Box>
+                   <Box
+                     as="button"
+                     fontSize="xs"
+                     px="2.5"
+                     py="1"
+                     borderRadius="md"
+                     border="1px solid"
+                     borderColor="red.200"
+                     bg="white"
+                     color="red.600"
+                     cursor="pointer"
+                     _dark={{ borderColor: "red.800", bg: "transparent", color: "red.300", _hover: { bg: "whiteAlpha.100" } }}
+                     _hover={{ bg: "red.50" }}
+                     onClick={() => handleDelete(proj.id)}
+                   >
+                     Excluir
+                   </Box>
+                </Flex>
+              </Flex>
+            </Flex>
           ))}
-        </div>
+        </Grid>
       )}
-    </div>
+    </Box>
   );
 }
-
-const styles = {
-  topbar: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" },
-  heading: { fontSize: "24px", fontWeight: "600", color: "#111" },
-  addBtn: {
-    fontSize: "13px", padding: "8px 16px", borderRadius: "8px",
-    border: "1px solid #ddd", background: "#fff", fontWeight: "500", cursor: "pointer",
-    boxShadow: "0 1px 2px rgba(0,0,0,0.05)", transition: "all 0.2s"
-  },
-  grid: { 
-    display: "grid", 
-    gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", 
-    gap: "20px" 
-  },
-  card: {
-    background: "#fff", border: "1px solid #eaeaea", borderRadius: "12px",
-    padding: "20px", display: "flex", flexDirection: "column", gap: "12px",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.02)", transition: "transform 0.1s, box-shadow 0.1s"
-  },
-  cardHeader: { display: "flex", justifyContent: "space-between", alignItems: "flex-start" },
-  title: { fontSize: "16px", fontWeight: "600", margin: 0, color: "#222" },
-  statusBadge: { fontSize: "11px", padding: "3px 8px", borderRadius: "20px", fontWeight: "500" },
-  desc: { fontSize: "13px", color: "#666", margin: 0, lineHeight: "1.5", flex: 1 },
-  meta: { fontSize: "12px", color: "#888", marginTop: "4px", paddingBottom: "12px", borderBottom: "1px solid #f0f0f0" },
-  actions: { display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "4px" },
-  bugsBtn: {
-    fontSize: "13px", padding: "6px 14px", borderRadius: "6px",
-    background: "#f0f8ff", color: "#0056b3", border: "1px solid #d0e3ff",
-    cursor: "pointer", fontWeight: "500", transition: "background 0.2s"
-  },
-  btnGroup: { display: "flex", gap: "8px" },
-  editBtn: {
-    fontSize: "12px", padding: "5px 10px", borderRadius: "6px",
-    background: "#fff", color: "#555", border: "1px solid #ddd", cursor: "pointer",
-  },
-  delBtn: {
-    fontSize: "12px", padding: "5px 10px", borderRadius: "6px",
-    background: "#fff", color: "#d32f2f", border: "1px solid #f8d7da", cursor: "pointer",
-  },
-  loading: { color: "#888", fontSize: "14px" },
-  empty: { color: "#888", fontSize: "14px" },
-};

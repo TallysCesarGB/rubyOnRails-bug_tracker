@@ -1,15 +1,20 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { usersApi } from "../services/api";
+import { Box, Flex, Text, Button as ChakraButton } from "@chakra-ui/react";
+import { useTheme } from "next-themes";
 
 const BASE_URL = "http://localhost:3000/api/v1";
 
 export function AuthPage() {
   const { login } = useAuth();
-  const [mode, setMode] = useState("login"); // "login" | "register"
+  const [mode, setMode] = useState("login");
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const { theme, setTheme } = useTheme();
+  const toggleColorMode = () => setTheme(theme === 'dark' ? 'light' : 'dark');
 
   const set = (field) => (e) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -46,24 +51,55 @@ export function AuthPage() {
   };
 
   return (
-    <div style={styles.page}>
-      <div style={styles.card}>
-        <div style={styles.logoRow}>
-          <span style={styles.logoIcon}>🐞</span>
-          <span style={styles.logoText}>Bug Tracker</span>
-        </div>
+    <Flex minH="100vh" position="relative" bg="#F4F5F7" _dark={{ bg: "gray.900" }} align="center" justify="center" fontFamily="Inter, system-ui, sans-serif">
+      <Box
+        as="button"
+        position="absolute"
+        top="6"
+        right="6"
+        py="2"
+        px="3"
+        borderRadius="md"
+        border="1px solid"
+        borderColor="gray.300"
+        _dark={{ borderColor: "gray.600", bg: "gray.700", color: "white", _hover: { bg: "gray.600" } }}
+        bg="white"
+        color="gray.800"
+        fontSize="sm"
+        fontWeight="bold"
+        cursor="pointer"
+        onClick={toggleColorMode}
+        _hover={{ bg: "gray.50" }}
+        transition="all 0.2s"
+        display="flex"
+        alignItems="center"
+        gap="2"
+        boxShadow="sm"
+      >
+        {theme === 'dark' ? '☀️ Modo Claro' : '🌙 Modo Escuro'}
+      </Box>
 
-        <h2 style={styles.title}>
+      <Box bg="white" _dark={{ bg: "gray.800", borderColor: "gray.700" }} border="1px solid" borderColor="gray.200" borderRadius="2xl" p="9" w="100%" maxW="380px" boxShadow="sm">
+        <Flex align="center" justify="center" gap="2" mb="6">
+          <Text fontSize="2xl">🐞</Text>
+          <Text fontSize="lg" fontWeight="bold" color="gray.900" _dark={{ color: "white" }}>Bug Tracker</Text>
+        </Flex>
+
+        <Text fontSize="md" fontWeight="semibold" color="gray.900" _dark={{ color: "gray.100" }} textAlign="center" mb="5">
           {mode === "login" ? "Entrar na conta" : "Criar conta"}
-        </h2>
+        </Text>
 
-        {error && <p style={styles.errorBox}>{error}</p>}
+        {error && (
+          <Box bg="red.50" color="red.600" _dark={{ bg: "red.900", color: "red.200" }} fontSize="sm" p="2" px="3" borderRadius="md" mb="3">
+            {error}
+          </Box>
+        )}
 
-        <form onSubmit={handleSubmit} style={styles.form}>
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
           {mode === "register" && (
             <Field label="Nome">
               <input
-                style={styles.input}
+                style={{ width: "100%", fontSize: "13px", padding: "8px 12px", borderRadius: "8px", border: "1px solid #D1D5DB", outline: "none", background: "inherit", color: "inherit" }}
                 value={form.name}
                 onChange={set("name")}
                 placeholder="Seu nome"
@@ -74,7 +110,7 @@ export function AuthPage() {
 
           <Field label="Email">
             <input
-              style={styles.input}
+              style={{ width: "100%", fontSize: "13px", padding: "8px 12px", borderRadius: "8px", border: "1px solid #D1D5DB", outline: "none", background: "inherit", color: "inherit" }}
               type="email"
               value={form.email}
               onChange={set("email")}
@@ -85,7 +121,7 @@ export function AuthPage() {
 
           <Field label="Senha">
             <input
-              style={styles.input}
+              style={{ width: "100%", fontSize: "13px", padding: "8px 12px", borderRadius: "8px", border: "1px solid #D1D5DB", outline: "none", background: "inherit", color: "inherit" }}
               type="password"
               value={form.password}
               onChange={set("password")}
@@ -94,114 +130,29 @@ export function AuthPage() {
             />
           </Field>
 
-          <button type="submit" disabled={loading} style={styles.submitBtn}>
-            {loading
-              ? "Aguarde..."
-              : mode === "login"
-              ? "Entrar"
-              : "Criar conta"}
-          </button>
+          <Box as="button" mt="2" fontSize="sm" py="2.5" borderRadius="md" bg="blue.600" _dark={{ bg: "blue.500" }} color="white" fontWeight="semibold" cursor="pointer" w="100%" _hover={{ bg: "blue.700" }} transition="all 0.2s" disabled={loading}>
+            {loading ? "Aguarde..." : mode === "login" ? "Entrar" : "Criar conta"}
+          </Box>
         </form>
 
-        <p style={styles.switchText}>
+        <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.400" }} textAlign="center" mt="4">
           {mode === "login" ? "Não tem conta?" : "Já tem conta?"}{" "}
-          <button
-            style={styles.switchBtn}
-            onClick={() => {
-              setMode(mode === "login" ? "register" : "login");
-              setError("");
-            }}
-          >
+          <Box as="span" cursor="pointer" color="blue.600" _dark={{ color: "blue.400" }} fontWeight="semibold" onClick={() => { setMode(mode === "login" ? "register" : "login"); setError(""); }}>
             {mode === "login" ? "Cadastre-se" : "Entrar"}
-          </button>
-        </p>
-      </div>
-    </div>
+          </Box>
+        </Text>
+      </Box>
+    </Flex>
   );
 }
 
 function Field({ label, children }) {
   return (
-    <div style={{ marginBottom: "14px" }}>
-      <label style={styles.label}>{label}</label>
-      {children}
-    </div>
+    <Box mb="3.5">
+      <Text as="label" fontSize="xs" color="gray.600" _dark={{ color: "gray.400" }} display="block" mb="1">{label}</Text>
+      <Box _dark={{ "& input": { borderColor: "gray.600" } }}>
+        {children}
+      </Box>
+    </Box>
   );
 }
-
-const styles = {
-  page: {
-    minHeight: "100vh",
-    background: "#F4F5F7",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontFamily: "Inter, system-ui, sans-serif",
-  },
-  card: {
-    background: "#fff",
-    border: "1px solid #E5E7EB",
-    borderRadius: "16px",
-    padding: "36px 32px",
-    width: "100%",
-    maxWidth: "380px",
-    boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
-  },
-  logoRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    marginBottom: "24px",
-    justifyContent: "center",
-  },
-  logoIcon: { fontSize: "24px" },
-  logoText: { fontSize: "18px", fontWeight: "700", color: "#111827" },
-  title: {
-    fontSize: "16px",
-    fontWeight: "600",
-    color: "#111",
-    marginBottom: "20px",
-    textAlign: "center",
-  },
-  form: { display: "flex", flexDirection: "column" },
-  label: { fontSize: "12px", color: "#666", display: "block", marginBottom: "5px" },
-  input: {
-    width: "100%",
-    fontSize: "13px",
-    padding: "8px 12px",
-    borderRadius: "8px",
-    border: "1px solid #D1D5DB",
-    boxSizing: "border-box",
-    outline: "none",
-  },
-  submitBtn: {
-    marginTop: "6px",
-    fontSize: "14px",
-    padding: "10px",
-    borderRadius: "8px",
-    border: "none",
-    background: "#4F46E5",
-    color: "#fff",
-    fontWeight: "600",
-    cursor: "pointer",
-    width: "100%",
-  },
-  errorBox: {
-    background: "#FCEBEB",
-    color: "#A32D2D",
-    fontSize: "13px",
-    padding: "8px 12px",
-    borderRadius: "8px",
-    marginBottom: "12px",
-  },
-  switchText: { fontSize: "13px", color: "#666", textAlign: "center", marginTop: "16px" },
-  switchBtn: {
-    background: "none",
-    border: "none",
-    color: "#4F46E5",
-    fontWeight: "600",
-    cursor: "pointer",
-    fontSize: "13px",
-    padding: 0,
-  },
-};

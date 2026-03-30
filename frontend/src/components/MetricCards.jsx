@@ -1,3 +1,5 @@
+import { Grid, Box, Text } from "@chakra-ui/react";
+
 export function MetricCards({ meta }) {
     if (!meta) return null;
 
@@ -9,36 +11,26 @@ export function MetricCards({ meta }) {
     ];
 
     return (
-        <div style={styles.grid}>
+        <Grid templateColumns="repeat(4, 1fr)" gap="10px" mb="6">
             {cards.map((card) => (
-                <div key={card.label} style={styles.card}>
-                    <p style={styles.label}>{card.label}</p>
-                    <p style={{ ...styles.value, color: card.color }}>{card.value}</p>
-                </div>
+                <Box 
+                    key={card.label} 
+                    bg="white" 
+                    _dark={{ bg: "gray.800", borderColor: "gray.700" }} 
+                    border="1px solid" 
+                    borderColor="transparent"
+                    borderRadius="md" 
+                    p="4"
+                    boxShadow="sm"
+                >
+                    <Text fontSize="xs" color="gray.600" _dark={{ color: "gray.400" }} mb="1.5">
+                        {card.label}
+                    </Text>
+                    <Text fontSize="2xl" fontWeight="medium" color={card.color} _dark={{ color: card.color }}>
+                        {card.value}
+                    </Text>
+                </Box>
             ))}
-        </div>
+        </Grid>
     );
 }
-
-const styles = {
-    grid: {
-        display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)",
-        gap: "10px",
-        marginBottom: "24px",
-    },
-    card: {
-        background: "#f5f5f5",
-        borderRadius: "8px",
-        padding: "14px 16px",
-    },
-    label: {
-        fontSize: "12px",
-        color: "#666",
-        marginBottom: "6px",
-    },
-    value: {
-        fontSize: "24px",
-        fontWeight: "500",
-    },
-};

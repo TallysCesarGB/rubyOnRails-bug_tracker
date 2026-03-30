@@ -16,7 +16,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_28_154307) do
     t.datetime "created_at", null: false
     t.text "description"
     t.integer "project_id", null: false
-    t.integer "reporter_id", null: false
+    t.integer "reporter_id"
     t.string "severity", default: "low"
     t.string "status", default: "open"
     t.string "title", null: false
