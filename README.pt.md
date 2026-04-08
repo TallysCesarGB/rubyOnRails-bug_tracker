@@ -45,7 +45,7 @@ Sistema completo de gerenciamento e rastreamento de bugs. A aplicação é divid
 ```
 Users ──────────────────────────────────────────────┐
   id, name, email, password, role                   │
-                                                     │
+                                                    │
 Projects                                            │
   id, name, description, status                     │
     │                                               │
@@ -57,6 +57,52 @@ Projects                                            │
              │
              └──► Comments
                     id, body, bug_id, user_id
+```
+
+---
+
+## 🗄️ Diagrama de Dados
+
+```mermaid
+erDiagram
+    USER {
+        uuid id PK
+        string name
+        string email
+        string role
+        timestamp created_at
+    }
+    PROJECT {
+        uuid id PK
+        string name
+        string description
+        string status
+        timestamp created_at
+    }
+    BUG {
+        uuid id PK
+        uuid project_id FK
+        uuid reporter_id FK
+        uuid assignee_id FK
+        string title
+        text description
+        string severity
+        string status
+        timestamp created_at
+        timestamp updated_at
+    }
+    COMMENT {
+        uuid id PK
+        uuid bug_id FK
+        uuid user_id FK
+        text body
+        timestamp created_at
+    }
+    USER ||--o{ BUG : "reporta"
+    USER ||--o{ BUG : "responsavel"
+    PROJECT ||--o{ BUG : "contem"
+    BUG ||--o{ COMMENT : "tem"
+    USER ||--o{ COMMENT : "escreve"
 ```
 
 ---

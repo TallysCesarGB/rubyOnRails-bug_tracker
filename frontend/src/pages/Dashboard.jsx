@@ -88,6 +88,7 @@ export function Dashboard({ projectId, onSelectBug }) {
         <BugForm
           onSubmit={handleCreate}
           onCancel={() => setShowForm(false)}
+          initialData={projectId ? {project_id: projectId} : {}}
         />
       )}
 
