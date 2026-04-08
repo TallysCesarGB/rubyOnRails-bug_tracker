@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { commentsApi } from "../services/api";
 import { useAuth } from "../context/AuthContext";
+import { Box, Flex, Text, Textarea, Button } from "@chakra-ui/react";
 
 export function CommentSection({ bugId, comments, onCommentAdded }) {
     const { user } = useAuth();
@@ -12,91 +13,67 @@ export function CommentSection({ bugId, comments, onCommentAdded }) {
         if (!body.trim()) return;
         setLoading(true);
         try {
-        const comment = await commentsApi.create(bugId, {
-            body,
-            user_id: user.id,   // vem da sessão automaticamente
-        });
-        onCommentAdded(comment);
-        setBody("");
+            const comment = await commentsApi.create(bugId, {
+                body,
+                user_id: user.id,   // vem da sessão automaticamente
+            });
+            onCommentAdded(comment);
+            setBody("");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div style={styles.section}>
-            <h3 style={styles.heading}>Comentários ({comments.length})</h3>
+        <Box mt="6">
+            <Text as="h3" fontSize="md" fontWeight="medium" mb="3" color="gray.900" _dark={{ color: "white" }}>
+                Comentários ({comments.length})
+            </Text>
 
-            <div style={styles.list}>
+            <Flex direction="column" gap="3" mb="4">
                 {comments.length === 0 && (
-                    <p style={styles.empty}>Nenhum comentário ainda.</p>
+                    <Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+                        Nenhum comentário ainda.
+                    </Text>
                 )}
                 {comments.map((c) => (
-                    <div key={c.id} style={styles.comment}>
-                        <div style={styles.commentHeader}>
-                            <span style={styles.author}>{c.user.name}</span>
-                            <span style={styles.date}>
+                    <Box key={c.id} bg="gray.50" _dark={{ bg: "gray.700", borderColor: "gray.600" }} border="1px solid" borderColor="gray.200" borderRadius="md" p="3">
+                        <Flex justify="space-between" mb="1.5">
+                            <Text fontSize="sm" fontWeight="medium" color="gray.900" _dark={{ color: "gray.100" }}>
+                                {c.user.name}
+                            </Text>
+                            <Text fontSize="xs" color="gray.500" _dark={{ color: "gray.400" }}>
                                 {new Date(c.created_at).toLocaleString("pt-BR")}
-                            </span>
-                        </div>
-                        <p style={styles.body}>{c.body}</p>
-                    </div>
+                            </Text>
+                        </Flex>
+                        <Text fontSize="sm" color="gray.700" _dark={{ color: "gray.300" }} lineHeight="1.5">
+                            {c.body}
+                        </Text>
+                    </Box>
                 ))}
-            </div>
+            </Flex>
 
-            <form onSubmit={handleSubmit} style={styles.form}>
-                <textarea
-                    style={styles.textarea}
+            <Box as="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap="2">
+                <Textarea
                     value={body}
                     onChange={(e) => setBody(e.target.value)}
                     placeholder="Escreva um comentário..."
                     rows={3}
+                    fontSize="sm"
+                    bg="white" _dark={{ bg: "gray.800", borderColor: "gray.600", color: "white" }}
+                    borderColor="gray.300"
+                    _focus={{ borderColor: "blue.500", boxShadow: "none" }}
+                    borderRadius="md"
                 />
-                <div style={styles.counter}>
+                <Text fontSize="xs" color="gray.500" _dark={{ color: "gray.400" }} textAlign="right">
                     {body.length} caracteres
-                </div>
-                <div style={styles.formBottom}>
-                    <button type="submit" disabled={loading} style={styles.sendBtn}>
-                        {loading ? "Enviando..." : "Comentar"}
-                    </button>
-                </div>
-            </form>
-        </div>
+                </Text>
+                <Flex gap="2" align="flex-end">
+                    <Button type="submit" isLoading={loading} size="sm" bg="gray.100" color="gray.800" _dark={{ bg: "whiteAlpha.200", color: "white", _hover: { bg: "whiteAlpha.300" } }} _hover={{ bg: "gray.200" }}>
+                        Comentar
+                    </Button>
+                </Flex>
+            </Box>
+        </Box>
     );
 }
-
-const styles = {
-    section: { marginTop: "24px" },
-    heading: { fontSize: "15px", fontWeight: "500", marginBottom: "12px" },
-    list: { display: "flex", flexDirection: "column", gap: "10px", marginBottom: "16px" },
-    empty: { fontSize: "13px", color: "#888" },
-    comment: {
-        background: "#f9f9f9", border: "0.5px solid #eee",
-        borderRadius: "8px", padding: "12px",
-    },
-    commentHeader: { display: "flex", justifyContent: "space-between", marginBottom: "6px" },
-    author: { fontSize: "13px", fontWeight: "500" },
-    date: { fontSize: "11px", color: "#999" },
-    body: { fontSize: "13px", color: "#444", lineHeight: "1.5" },
-    form: { display: "flex", flexDirection: "column", gap: "8px" },
-    textarea: {
-        fontSize: "13px", padding: "8px 10px", borderRadius: "8px",
-        border: "0.5px solid #ccc", resize: "vertical",
-    },
-    formBottom: { display: "flex", gap: "8px" },
-    userInput: {
-        fontSize: "13px", padding: "6px 10px", borderRadius: "8px",
-        border: "0.5px solid #ccc", width: "130px",
-    },
-    sendBtn: {
-        fontSize: "13px", padding: "6px 16px", borderRadius: "8px",
-        border: "0.5px solid #ccc", background: "#f5f5f5",
-        fontWeight: "500", cursor: "pointer",
-    },
-    counter: {
-        fontSize: "11px",
-        color: "#999",
-        textAlign: "right",
-        marginTop: "4px",
-    },
-};
